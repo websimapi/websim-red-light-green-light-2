@@ -24,8 +24,9 @@ class App {
         
         this.clock = new THREE.Clock();
 
-        this.setupUI();
         window.addEventListener('resize', this.onWindowResize.bind(this));
+        // Defer UI setup until after constructor
+        setTimeout(() => this.setupUI(), 0);
         this.animate();
     }
     
@@ -46,13 +47,30 @@ class App {
         });
 
         startButton.addEventListener('click', () => {
-            document.getElementById('ui-overlay').style.display = 'none';
-            this.game.start();
+            if (this.game.state === 'GAME_OVER') {
+                this.restartGame();
+            } else {
+                document.getElementById('ui-overlay').style.display = 'none';
+                this.game.start();
+            }
         });
     }
 
+    restartGame() {
+        // Hide overlay
+        document.getElementById('ui-overlay').style.display = 'none';
+
+        // Reset player
+        player.position.set(0, 2.5, 10);
+        player.rotation.x = 0;
+
+        // Reset and start game
+        this.game.reset();
+        this.game.start();
+    }
+
     handleMovement(movementScore) {
-        if (this.game.state === 'GREEN_LIGHT' || this.game.state === 'WAITING') {
+        if (this.game.state === 'GREEN_LIGHT') {
             const speed = movementScore * 0.2;
             player.position.z -= speed;
         }
@@ -87,4 +105,3 @@ class App {
 }
 
 new App();
-

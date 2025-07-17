@@ -6,10 +6,20 @@ export class AudioManager {
         this.loadSounds();
     }
 
+    resumeContext() {
+        if (this.audioContext.state === 'suspended') {
+            this.audioContext.resume();
+        }
+    }
+
     async loadSound(name, url) {
-        const response = await fetch(url);
-        const arrayBuffer = await response.arrayBuffer();
-        this.sounds[name] = await this.audioContext.decodeAudioData(arrayBuffer);
+        try {
+            const response = await fetch(url);
+            const arrayBuffer = await response.arrayBuffer();
+            this.sounds[name] = await this.audioContext.decodeAudioData(arrayBuffer);
+        } catch (error) {
+            console.error(`Failed to load sound: ${name}`, error);
+        }
     }
 
     loadSounds() {
@@ -36,4 +46,3 @@ export class AudioManager {
         }
     }
 }
-

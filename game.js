@@ -9,9 +9,19 @@ export class Game {
         this.timer = 0;
         this.turnDuration = 0;
         this.audioManager = new AudioManager();
+        this.initialDollRotation = this.dollHead.rotation.clone();
+    }
+
+    reset() {
+        this.state = 'WAITING';
+        this.dollHead.rotation.copy(this.initialDollRotation);
+        this.audioManager.stopSound('chant');
     }
 
     start() {
+        // Resume audio context on user gesture
+        this.audioManager.resumeContext();
+        
         this.state = 'RED_LIGHT'; // Start facing player
         this.dollHead.rotation.y = Math.PI; // Face player
         setTimeout(() => this.greenLight(), 2000);
@@ -70,10 +80,11 @@ export class Game {
             this.audioManager.playSound('shot');
             console.log("You moved! Game Over.");
             const messageEl = document.getElementById('message');
+            const startButton = document.getElementById('start-button');
             messageEl.textContent = 'Game Over!';
             document.getElementById('ui-overlay').style.display = 'flex';
-            document.getElementById('start-button').style.display = 'none'; // Or change to "Restart"
+            startButton.textContent = 'Restart';
+            startButton.style.display = 'block';
         }
     }
 }
-

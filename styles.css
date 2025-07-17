@@ -49,6 +49,12 @@ body {
     text-transform: uppercase;
     font-weight: bold;
     box-shadow: 0 0 10px #ff0055;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+#start-button:hover:not(:disabled) {
+    background-color: #ff4081;
+    box-shadow: 0 0 15px #ff4081;
 }
 
 #start-button:disabled {
@@ -56,4 +62,3 @@ body {
     box-shadow: none;
     cursor: not-allowed;
 }
-
